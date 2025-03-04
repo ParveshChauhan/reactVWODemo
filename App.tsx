@@ -93,10 +93,20 @@ function App(): React.JSX.Element {
 
 
   React.useEffect(() => {
+    // Ensure config is called before startRecording
+  config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
+  
+  // Now start recording
+  setTimeout(() => {
+    startRecording();
+    setScreenName("Home page");
+  }, 5000); 
+
     const appstatelistener = AppState.addEventListener('change', state => {
       console.log('App state changed to', state);
     });
-
+    // config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
+    
     const trackAutomaticEvents = false;
     const mixpanel = new Mixpanel("f6df100a7044baf6e12c4cff91d2b354", trackAutomaticEvents);
     mixpanel.init();
@@ -128,8 +138,8 @@ function App(): React.JSX.Element {
 
     // config('706378', '74951db9904fb2e2df78d49716ba690d', '');
     // config('893359', 'aa340824759d74c11d262d4431337302', '');
-    config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
-     startRecording()
+    // config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
+     
      
     addSessionRefreshListener(result => {
       // console.log("Session Refresh Event:", result);
@@ -182,7 +192,7 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
+  // startRecording();
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
