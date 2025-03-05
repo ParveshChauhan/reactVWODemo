@@ -41,7 +41,7 @@ import { Mixpanel } from "mixpanel-react-native";
 
 import  ReactMoE from 'react-native-moengage';
 import { MoEProperties } from 'react-native-moengage';
-
+import { MoEInitConfig, MoEPushConfig, MoEngageLogConfig, MoEngageLogLevel } from "react-native-moengage";
 import crashlytics from '@react-native-firebase/crashlytics';
 
 type SectionProps = PropsWithChildren<{
@@ -94,6 +94,12 @@ function App(): React.JSX.Element {
 
   React.useEffect(() => {
     // Ensure config is called before startRecording
+    const moEInitConfig = new MoEInitConfig(
+      MoEPushConfig.defaultConfig(),
+      new MoEngageLogConfig(MoEngageLogLevel.DEBUG, true)
+    );
+    ReactMoE.initialize("R4D6OPLRCPH04BL24NXMN48G",moEInitConfig);
+
   config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
   
   // Now start recording
@@ -102,16 +108,18 @@ function App(): React.JSX.Element {
     setScreenName("Home page");
   }, 5000); 
 
+  const trackAutomaticEvents = false;
+  const mixpanel = new Mixpanel("f6df100a7044baf6e12c4cff91d2b354", trackAutomaticEvents);
+  mixpanel.init();
+
+  
+
     const appstatelistener = AppState.addEventListener('change', state => {
       console.log('App state changed to', state);
     });
     // config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
     
-    const trackAutomaticEvents = false;
-    const mixpanel = new Mixpanel("f6df100a7044baf6e12c4cff91d2b354", trackAutomaticEvents);
-    mixpanel.init();
-
-    ReactMoE.initialize("R4D6OPLRCPH04BL24NXMN48G");
+   
 
     const IntegrationsList = {
       CRASHLYTICS: 'CRASHLYTICS',
@@ -136,9 +144,7 @@ function App(): React.JSX.Element {
     };
     enableVWOIntegrations(integrationCallback);
 
-    // config('706378', '74951db9904fb2e2df78d49716ba690d', '');
-    // config('893359', 'aa340824759d74c11d262d4431337302', '');
-    // config('780027', 'e7277b4225ee69ca8d60b2994556dfc3', '');
+
      
      
     addSessionRefreshListener(result => {
@@ -166,15 +172,20 @@ function App(): React.JSX.Element {
         break;
  
       case "MOENGAGE":
+        
+        console.log('moengage is called');
         ReactMoE.setUserUniqueID("VWO_123");
         ReactMoE.setUserName("Parvesh");
-        ReactMoE.setUserEmailID("johndoe@example.com");
+        ReactMoE.setUserEmailID("parvesh@gmail.com");
 
     // Track an Event
-    const eventProperties = new MoEProperties();
-    eventProperties.addAttribute("session_url", sessionURL);
-    ReactMoE.trackEvent("VWOSessionUpdated", eventProperties);
-       
+         const eventProperties = new MoEProperties();
+         eventProperties.addAttribute("session_url", sessionURL);
+         ReactMoE.trackEvent("VWOSessionUpdated", eventProperties);
+         ReactMoE.setAlias("VWOSessionUpdated");
+          ReactMoE.setUserAttribute("VWOSessionUpdated",eventProperties);
+
+            
         break;
 
       default:
